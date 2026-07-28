@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SAT Guatemala - Portal de Servicios</title>
+<meta name="robots" content="noindex, nofollow">
+<style>
+  :root {
+    --sat-blue: #003A70;
+    --sat-blue-mid: #005DA8;
+    --sat-blue-light: #1A78C2;
+    --sat-orange: #E8722A;
+    --sat-orange-light: #F59340;
+    --sat-bg: #F4F7FA;
+    --sat-white: #FFFFFF;
+    --sat-gray: #6B7280;
+    --sat-gray-light: #E5E9F0;
+    --sat-text: #1A1F2E;
+    --sat-success: #166534;
+    --sat-success-bg: #DCFCE7;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--sat-bg); color: var(--sat-text); min-height: 100vh; }
+
+  /* TOPBAR */
+  .topbar { background: var(--sat-blue); color: white; padding: 6px 2rem; font-size: 12px; display: flex; justify-content: space-between; align-items: center; }
+  .topbar a { color: #A8C4E0; text-decoration: none; margin-left: 1rem; }
+
+  /* HEADER */
+  header { background: var(--sat-white); border-bottom: 3px solid var(--sat-orange); padding: 0 2rem; }
+  .header-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 12px 0; }
+  .logo-area { display: flex; align-items: center; gap: 14px; }
+  .logo-svg { width: 56px; height: 56px; }
+  .logo-text h1 { font-size: 22px; color: var(--sat-blue); font-weight: 700; letter-spacing: -0.5px; }
+  .logo-text p { font-size: 11px; color: var(--sat-gray); text-transform: uppercase; letter-spacing: 1px; }
+  .header-badge { background: var(--sat-blue); color: white; padding: 6px 14px; border-radius: 4px; font-size: 12px; font-weight: 600; }
+
+  /* NAV */
+  nav { background: var(--sat-blue-mid); }
+  .nav-inner { max-width: 1100px; margin: 0 auto; display: flex; }
+  nav a { color: rgba(255,255,255,0.88); text-decoration: none; padding: 11px 18px; font-size: 13px; font-weight: 500; display: block; transition: background 0.2s; }
+  nav a:hover { background: rgba(255,255,255,0.12); }
+  nav a.active { background: var(--sat-orange); color: white; }
+
+  /* HERO BANNER */
+  .hero { background: linear-gradient(135deg, var(--sat-blue) 0%, var(--sat-blue-light) 100%); color: white; padding: 2.5rem 2rem; text-align: center; }
+  .hero h2 { font-size: 26px; font-weight: 700; margin-bottom: 8px; }
+  .hero p { font-size: 15px; opacity: 0.85; }
+
+  /* MAIN */
+  main { max-width: 1100px; margin: 2rem auto; padding: 0 2rem; display: grid; grid-template-columns: 1fr 340px; gap: 2rem; }
+
+  /* SERVICIOS GRID */
+  .services-section h2 { font-size: 18px; color: var(--sat-blue); margin-bottom: 1rem; padding-bottom: 8px; border-bottom: 2px solid var(--sat-orange); }
+  .services-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; margin-bottom: 2rem; }
+  .service-card { background: white; border: 1px solid var(--sat-gray-light); border-radius: 8px; padding: 1.25rem 1rem; text-align: center; cursor: pointer; transition: all 0.2s; position: relative; }
+  .service-card:hover { border-color: #aab; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+  .service-card.disabled { opacity: 0.5; cursor: not-allowed; }
+  .service-card.disabled:hover { border-color: var(--sat-gray-light); box-shadow: none; }
+  .service-card.active-service { border-color: var(--sat-orange); border-width: 2px; }
+  .service-card .icon { font-size: 32px; margin-bottom: 10px; }
+  .service-card h3 { font-size: 13px; color: var(--sat-text); font-weight: 600; }
+  .service-card p { font-size: 11px; color: var(--sat-gray); margin-top: 4px; }
+  .badge-pronto { position: absolute; top: 8px; right: 8px; background: #FEF3C7; color: #92400E; font-size: 10px; padding: 2px 6px; border-radius: 10px; font-weight: 600; }
+  .badge-nuevo { position: absolute; top: 8px; right: 8px; background: #DCFCE7; color: #166534; font-size: 10px; padding: 2px 6px; border-radius: 10px; font-weight: 600; }
+
+  /* FORMULARIO CONTAINER */
+  .form-container { display: none; }
+  .form-container.active { display: block; }
+
+  .nit-form-card { background: white; border-radius: 10px; border: 2px solid var(--sat-orange); padding: 1.75rem; }
+  .nit-form-card h3 { color: var(--sat-blue); font-size: 17px; margin-bottom: 4px; }
+  .nit-form-card .subtitle { font-size: 13px; color: var(--sat-gray); margin-bottom: 1.25rem; }
+  .form-group { margin-bottom: 14px; }
+  label { display: block; font-size: 13px; font-weight: 600; color: var(--sat-text); margin-bottom: 5px; }
+  label span.req { color: var(--sat-orange); }
+  input, select { width: 100%; padding: 9px 12px; border: 1.5px solid #D1D5DB; border-radius: 6px; font-size: 14px; color: var(--sat-text); background: #FAFAFA; transition: border 0.2s; outline: none; }
+  input:focus, select:focus { border-color: var(--sat-blue-mid); background: white; }
+  input::placeholder { color: #9CA3AF; }
+  .btn-generar { width: 100%; background: var(--sat-orange); color: white; border: none; padding: 12px; border-radius: 6px; font-size: 15px; font-weight: 700; cursor: pointer; transition: background 0.2s; margin-top: 8px; }
+  .btn-generar:hover { background: #D05F18; }
+
+  /* SIDEBAR */
+  .sidebar { display: flex; flex-direction: column; gap: 1.25rem; }
+  .sidebar-card { background: white; border-radius: 8px; border: 1px solid var(--sat-gray-light); padding: 1.25rem; }
+  .sidebar-card h4 { font-size: 14px; color: var(--sat-blue); font-weight: 700; margin-bottom: 10px; border-bottom: 1px solid var(--sat-gray-light); padding-bottom: 8px; }
+  .sidebar-card ul { list-style: none; }
+  .sidebar-card ul li { font-size: 13px; color: var(--sat-gray); padding: 5px 0; border-bottom: 1px solid #F3F4F6; display: flex; align-items: center; gap: 8px; }
+  .sidebar-card ul li::before { content: '›'; color: var(--sat-orange); font-weight: 700; font-size: 16px; }
+  .stat-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-bottom: 1px solid #F3F4F6; }
+  .stat-row span:first-child { font-size: 12px; color: var(--sat-gray); }
+  .stat-row span:last-child { font-size: 13px; font-weight: 700; color: var(--sat-blue); }
+  .alert-importante { background: #FFF7ED; border: 1px solid #FED7AA; border-radius: 8px; padding: 12px; }
+  .alert-importante h4 { color: #92400E; font-size: 13px; margin-bottom: 6px; }
+  .alert-importante p { font-size: 12px; color: #78350F; line-height: 1.5; }
+
+  /* FOOTER */
+  footer { background: var(--sat-blue); color: rgba(255,255,255,0.7); text-align: center; padding: 1.5rem; font-size: 12px; margin-top: 3rem; }
+  footer strong { color: white; }
+
+  /* MODAL */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; }
+  .modal-overlay.show { display: flex; }
+  .modal { background: white; border-radius: 12px; padding: 2rem; max-width: 420px; width: 90%; text-align: center; }
+  .modal h3 { color: var(--sat-blue); margin-bottom: 10px; }
+  .modal p { font-size: 14px; color: var(--sat-gray); margin-bottom: 1.25rem; }
+  .modal .btn-ok { background: var(--sat-blue); color: white; border: none; padding: 10px 30px; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 600; }
+
+  @media (max-width: 768px) {
+    main { grid-template-columns: 1fr; }
+    .nav-inner { flex-wrap: wrap; }
+    nav a { padding: 8px 12px; font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <span>🇬🇹 República de Guatemala — Superintendencia de Administración Tributaria</span>
+  <div>
+    <a href="#">Ayuda</a>
+    <a href="#">Mapa del sitio</a>
+    <a href="#">Contacto</a>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <div class="logo-area">
+      <svg class="logo-svg" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="28" cy="28" r="28" fill="#003A70"/>
+        <text x="28" y="34" text-anchor="middle" font-family="Arial" font-weight="900" font-size="18" fill="white">SAT</text>
+        <rect x="10" y="38" width="36" height="3" rx="1.5" fill="#E8722A"/>
+      </svg>
+      <div class="logo-text">
+        <h1>SAT Guatemala</h1>
+        <p>Superintendencia de Administración Tributaria</p>
+      </div>
+    </div>
+    <div class="header-badge">Portal de Servicios en Línea</div>
+  </div>
+</header>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="active">Inicio</a>
+    <a href="#" onclick="showDisabled(event)">RTU</a>
+    <a href="#" onclick="showDisabled(event)">Declaraciones</a>
+    <a href="#" onclick="showDisabled(event)">Pagos</a>
+    <a href="#" onclick="showDisabled(event)">Consultas</a>
+    <a href="#" onclick="showDisabled(event)">SICOI</a>
+    <a href="#" onclick="showDisabled(event)">Trámites</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <h2>Portal de Servicios Tributarios</h2>
+  <p>Realiza tus trámites fiscales de manera rápida, segura y desde cualquier lugar</p>
+</div>
+
+<!-- MAIN CONTENT -->
+<main>
+  <div>
+    <!-- SERVICIOS -->
+    <div class="services-section">
+      <h2>Servicios Disponibles</h2>
+      <div class="services-grid">
+        <div class="service-card active-service" id="card-nit" onclick="switchService('nit')">
+          <div class="icon">🪪</div>
+          <h3>Generar NIT</h3>
+          <p>Solicitar número de identificación tributaria</p>
+          <span class="badge-nuevo">ACTIVO</span>
+        </div>
+        <div class="service-card" id="card-patente" onclick="switchService('patente')">
+          <div class="icon">📜</div>
+          <h3>Patente de Comercio</h3>
+          <p>Inscripción mercantil de empresa</p>
+          <span class="badge-nuevo">ACTIVO</span>
+        </div>
+        <div class="service-card disabled" onclick="showDisabled(event)">
+          <div class="icon">📋</div>
+          <h3>RTU en Línea</h3>
+          <p>Registro tributario unificado</p>
+          <span class="badge-pronto">Próximamente</span>
+        </div>
+        <div class="service-card disabled" onclick="showDisabled(event)">
+          <div class="icon">📊</div>
+          <h3>Declaraguate</h3>
+          <p>Presentar declaraciones de impuestos</p>
+          <span class="badge-pronto">Próximamente</span>
+        </div>
+        <div class="service-card disabled" onclick="showDisabled(event)">
+          <div class="icon">💳</div>
+          <h3>Pago en Línea</h3>
+          <p>Pagar impuestos y aranceles</p>
+          <span class="badge-pronto">Próximamente</span>
+        </div>
+        <div class="service-card disabled" onclick="showDisabled(event)">
+          <div class="icon">🔍</div>
+          <h3>Consulta NIT</h3>
+          <p>Verificar datos de contribuyentes</p>
+          <span class="badge-pronto">Próximamente</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- FORMULARIO 1: NIT -->
+    <div class="form-container active" id="form-nit-container">
+      <div class="nit-form-card" id="nit-form-section">
+        <h3>🪪 Solicitud de NIT — Número de Identificación Tributaria</h3>
+        <p class="subtitle">Complete el formulario para enviar su información.</p>
+
+        <form id="form-nit" method="POST">
+          <input type="hidden" name="tipo_tramite" value="Solicitud de NIT">
+          <div class="form-group">
+            <label>Nombre Completo del Representante <span class="req">*</span></label>
+            <input type="text" name="representante" placeholder="Ej: Juan José Orozco Pineda" maxlength="80" required>
+          </div>
+          <div class="form-group">
+            <label>Nombre Completo de la empresa <span class="req">*</span></label>
+            <input type="text" name="empresa" placeholder="Ej: Banco Agromercantil de Guatemala S.A." maxlength="80" required>
+          </div>
+          <div class="form-group">
+            <label>Correo Electrónico <span class="req">*</span></label>
+            <input type="email" name="correo" placeholder="tucorreo@ejemplo.com" required>
+          </div>
+          <div class="form-group">
+            <label>Número de DPI / CUI <span class="req">*</span></label>
+            <input type="text" name="dpi" placeholder="Ej: 1234567890101" maxlength="13" oninput="this.value=this.value.replace(/\D/g,'')" required>
+          </div>
+          <div class="form-group">
+            <label>Departamento <span class="req">*</span></label>
+            <select name="departamento" required>
+              <option value="">-- Seleccione departamento --</option>
+              <option>Guatemala</option><option>Alta Verapaz</option><option>Baja Verapaz</option>
+              <option>Chimaltenango</option><option>Chiquimula</option><option>El Progreso</option>
+              <option>Escuintla</option><option>Huehuetenango</option><option>Izabal</option>
+              <option>Jalapa</option><option>Jutiapa</option><option>Petén</option>
+              <option>Quetzaltenango</option><option>Quiché</option><option>Retalhuleu</option>
+              <option>Sacatepéquez</option><option>San Marcos</option><option>Santa Rosa</option>
+              <option>Sololá</option><option>Suchitepéquez</option><option>Totonicapán</option>
+              <option>Zacapa</option>
+            </select>
+          </div>
+          <button type="submit" class="btn-generar">📨 Enviar Solicitud de NIT</button>
+        </form>
+        <div id="status-nit" style="display:none; margin-top: 15px; padding: 15px; border-radius: 8px; text-align: center; font-weight: bold;"></div>
+      </div>
+    </div>
+
+    <!-- FORMULARIO 2: PATENTE DE COMERCIO -->
+    <div class="form-container" id="form-patente-container">
+      <div class="nit-form-card">
+        <h3>📜 Solicitud de Patente de Comercio</h3>
+        <p class="subtitle">Complete los datos para la inscripción de su establecimiento mercantil.</p>
+
+        <form id="form-patente" method="POST">
+          <input type="hidden" name="tipo_tramite" value="Patente de Comercio">
+          <div class="form-group">
+            <label>Nombre Comercial de la Empresa <span class="req">*</span></label>
+            <input type="text" name="nombre_comercial" placeholder="Ej: Soluciones Digitales S.A." maxlength="80" required>
+          </div>
+          <div class="form-group">
+            <label>Propietario / Representante Legal <span class="req">*</span></label>
+            <input type="text" name="propietario" placeholder="Ej: María Elena Castillo" maxlength="80" required>
+          </div>
+          <div class="form-group">
+            <label>Correo Electrónico de Contacto <span class="req">*</span></label>
+            <input type="email" name="correo" placeholder="empresa@ejemplo.com" required>
+          </div>
+          <div class="form-group">
+            <label>Capital Inicial (Quetzales) <span class="req">*</span></label>
+            <input type="text" name="capital" placeholder="Ej: 5000.00" oninput="this.value=this.value.replace(/[^0-9.]/g,'')" required>
+          </div>
+          <div class="form-group">
+            <label>Departamento <span class="req">*</span></label>
+            <select id="patente-depto" name="departamento" onchange="actualizarMunicipios()" required>
+              <option value="">-- Seleccione departamento --</option>
+              <option value="Guatemala">Guatemala</option>
+              <option value="Sacatepéquez">Sacatepéquez</option>
+              <option value="Quetzaltenango">Quetzaltenango</option>
+              <option value="Escuintla">Escuintla</option>
+              <option value="Chimaltenango">Chimaltenango</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Municipio <span class="req">*</span></label>
+            <select id="patente-mun" name="municipio" required>
+              <option value="">-- Primero seleccione un departamento --</option>
+            </select>
+          </div>
+          <button type="submit" class="btn-generar">📨 Enviar Solicitud de Patente</button>
+        </form>
+        <div id="status-patente" style="display:none; margin-top: 15px; padding: 15px; border-radius: 8px; text-align: center; font-weight: bold;"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-card alert-importante">
+      <h4>⚠️ Aviso Importante</h4>
+      <p>Este portal es de uso exclusivo para trámites académicos. Los registros generados son de carácter demostrativo y no tienen validez legal oficial.</p>
+    </div>
+
+    <div class="sidebar-card">
+      <h4>Estadísticas del Sistema</h4>
+      <div class="stat-row"><span>Estado del Sistema</span><span style="color:#16A34A">✅ En Línea</span></div>
+      <div class="stat-row"><span>Última Actualización</span><span id="stat-hora">—</span></div>
+    </div>
+
+    <div class="sidebar-card">
+      <h4>Canales de Atención</h4>
+      <ul>
+        <li>sat.gob.gt</li>
+        <li>direccion.sot@gmail.com</li>
+      </ul>
+    </div>
+  </div>
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <strong>SAT — Superintendencia de Administración Tributaria</strong><br>
+  6a. Avenida 3-11, Zona 1, Ciudad de Guatemala &nbsp;|&nbsp; 1546 &nbsp;|&nbsp; sat.gob.gt<br>
+  <span style="font-size:11px; opacity:0.6;">Portal académico — Proyecto de clase. No es un portal oficial de la SAT.</span>
+</footer>
+
+<!-- MODAL SERVICIO DESHABILITADO -->
+<div class="modal-overlay" id="modal-disabled">
+  <div class="modal">
+    <div style="font-size:48px; margin-bottom:12px;">🔒</div>
+    <h3>Servicio No Disponible</h3>
+    <p>Este servicio estará disponible próximamente. Por el momento, puede utilizar los servicios de <strong>Generación de NIT</strong> y <strong>Patente de Comercio</strong>.</p>
+    <button class="btn-ok" onclick="closeModal()">Entendido</button>
+  </div>
+</div>
+
+<!-- SCRIPT DE NAVEGACIÓN Y FORMULARIO FORMSPREE -->
+<script>
+  // Base de datos de municipios por departamento para el formulario de Patente
+  const municipiosPorDepto = {
+    "Guatemala": ["Guatemala", "Mixco", "Villa Nueva", "San Miguel Petapa", "Amatitlán", "Chinautla"],
+    "Sacatepéquez": ["Antigua Guatemala", "Jocotenango", "Pastores", "Sumpango", "Ciudad Vieja"],
+    "Quetzaltenango": ["Quetzaltenango", "Salcajá", "Olintepeque", "San Juan Ostuncalco", "Coatepeque"],
+    "Escuintla": ["Escuintla", "Santa Lucía Cotzumalguapa", "Nueva Concepción", "Palín", "Tiquisate"],
+    "Chimaltenango": ["Chimaltenango", "San Martín Jilotepeque", "San Juan Comalapa", "Patzicía", "Tecpán Guatemala"]
+  };
+
+  function actualizarMunicipios() {
+    const deptoSelect = document.getElementById("patente-depto");
+    const munSelect = document.getElementById("patente-mun");
+    const deptoSeleccionado = deptoSelect.value;
+
+    // Limpiar opciones actuales
+    munSelect.innerHTML = '<option value="">-- Seleccione municipio --</option>';
+
+    if (deptoSeleccionado && municipiosPorDepto[deptoSeleccionado]) {
+      municipiosPorDepto[deptoSeleccionado].forEach(municipio => {
+        const option = document.createElement("option");
+        option.value = municipio;
+        option.textContent = municipio;
+        munSelect.appendChild(option);
+      });
+    } else {
+      munSelect.innerHTML = '<option value="">-- Primero seleccione un departamento --</option>';
+    }
+  }
+
+  // Cambiar entre servicios activos
+  function switchService(serviceName) {
+    document.getElementById('card-nit').classList.remove('active-service');
+    document.getElementById('card-patente').classList.remove('active-service');
+    
+    document.getElementById('form-nit-container').classList.remove('active');
+    document.getElementById('form-patente-container').classList.remove('active');
+
+    if (serviceName === 'nit') {
+      document.getElementById('card-nit').classList.add('active-service');
+      document.getElementById('form-nit-container').classList.add('active');
+    } else if (serviceName === 'patente') {
+      document.getElementById('card-patente').classList.add('active-service');
+      document.getElementById('form-patente-container').classList.add('active');
+    }
+  }
+
+  function showDisabled(e) {
+    if (e) e.preventDefault();
+    document.getElementById("modal-disabled").classList.add("show");
+  }
+
+  function closeModal() {
+    document.getElementById("modal-disabled").classList.remove("show");
+  }
+
+  document.getElementById("stat-hora").textContent = new Date().toLocaleTimeString("es-GT", {hour:"2-digit",minute:"2-digit"});
+
+  // Configuración de envío con Formspree para ambos formularios
+  function handleFormSubmit(formId, statusId) {
+    var form = document.getElementById(formId);
+    var status = document.getElementById(statusId);
+
+    form.addEventListener("submit", function(event) {
+      event.preventDefault();
+      var data = new FormData(event.target);
+      
+      fetch("https://formspree.io/f/mwvgrqov", {
+        method: "POST",
+        body: data,
+        headers: {
+            'Accept': 'application/json'
+        }
+      }).then(response => {
+        if (response.ok) {
+          status.style.display = "block";
+          status.style.background = "#DEF7EC";
+          status.style.color = "#03543F";
+          status.innerHTML = "¡Información enviada con éxito a su correo!";
+          form.reset();
+          if(formId === 'form-patente') {
+            document.getElementById("patente-mun").innerHTML = '<option value="">-- Primero seleccione un departamento --</option>';
+          }
+        } else {
+          response.json().then(data => {
+            status.style.display = "block";
+            status.style.background = "#FDE8E8";
+            status.style.color = "#9B1C1C";
+            status.innerHTML = "Oops! Hubo un problema al enviar.";
+          })
+        }
+      }).catch(error => {
+        status.style.display = "block";
+        status.style.background = "#FDE8E8";
+        status.style.color = "#9B1C1C";
+        status.innerHTML = "Oops! Hubo un problema de conexión.";
+      });
+    });
+  }
+
+  handleFormSubmit("form-nit", "status-nit");
+  handleFormSubmit("form-patente", "status-patente");
+</script>
+</body>
+</html>
