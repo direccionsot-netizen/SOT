@@ -210,7 +210,7 @@
       </div>
     </div>
 
-    <!-- FORMULARIO 1: NIT -->
+   <!-- FORMULARIO 1: NIT -->
     <div class="form-container active" id="form-nit-container">
       <div class="nit-form-card" id="nit-form-section">
         <h3>🪪 Solicitud de NIT — Número de Identificación Tributaria</h3>
@@ -236,16 +236,19 @@
           </div>
           <div class="form-group">
             <label>Departamento <span class="req">*</span></label>
-            <select name="departamento" required>
+            <select id="nit-depto" name="departamento" onchange="actualizarMunicipiosNit()" required>
               <option value="">-- Seleccione departamento --</option>
-              <option>Guatemala</option><option>Alta Verapaz</option><option>Baja Verapaz</option>
-              <option>Chimaltenango</option><option>Chiquimula</option><option>El Progreso</option>
-              <option>Escuintla</option><option>Huehuetenango</option><option>Izabal</option>
-              <option>Jalapa</option><option>Jutiapa</option><option>Petén</option>
-              <option>Quetzaltenango</option><option>Quiché</option><option>Retalhuleu</option>
-              <option>Sacatepéquez</option><option>San Marcos</option><option>Santa Rosa</option>
-              <option>Sololá</option><option>Suchitepéquez</option><option>Totonicapán</option>
-              <option>Zacapa</option>
+              <option value="Guatemala">Guatemala</option>
+              <option value="Sacatepéquez">Sacatepéquez</option>
+              <option value="Quetzaltenango">Quetzaltenango</option>
+              <option value="Escuintla">Escuintla</option>
+              <option value="Chimaltenango">Chimaltenango</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Municipio <span class="req">*</span></label>
+            <select id="nit-mun" name="municipio" required>
+              <option value="">-- Primero seleccione un departamento --</option>
             </select>
           </div>
           <button type="submit" class="btn-generar">📨 Enviar Solicitud de NIT</button>
@@ -253,7 +256,6 @@
         <div id="status-nit" style="display:none; margin-top: 15px; padding: 15px; border-radius: 8px; text-align: center; font-weight: bold;"></div>
       </div>
     </div>
-
     <!-- FORMULARIO 2: PATENTE DE COMERCIO -->
     <div class="form-container" id="form-patente-container">
       <div class="nit-form-card">
